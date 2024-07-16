@@ -67,6 +67,14 @@ async def update_book(book: BookRequest):
             Books[i] = Book(**book.dict())
 
 
+@app.delete("/books/{book_id}")
+async def delete_book(book_id: int):
+    for book in Books:
+        if book.id == book_id:
+            Books.remove(book)
+        break
+
+
 @app.post("/create-book")
 async def create_book(book_request: BookRequest):
     print(f"Book: {book_request}")
