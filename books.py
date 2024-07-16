@@ -9,13 +9,15 @@ class Book:
     author: str
     description: str
     rating: int
+    published_date: int
 
-    def __init__(self, id, title, author, description, rating):
+    def __init__(self, id, title, author, description, rating, published_date):
         self.id = id
         self.title = title
         self.author = author
         self.description = description
         self.rating = rating
+        self.published_date = published_date
 
 
 class BookRequest(BaseModel):
@@ -24,15 +26,16 @@ class BookRequest(BaseModel):
     author: str = Field(min_length=1)
     description: str = Field(min_length=1, max_length=100)
     rating: int = Field(gt=0, lt=6)
+    published_date: int = Field(gt=1999, lt=2031)
 
 
 Books = [
-    Book(1, "Book Title 1", "Author 1", "Book Description 1", 4),
-    Book(2, "Book Title 2", "Author 2", "Book Description 2", 5),
-    Book(3, "Book Title 3", "Author 3", "Book Description 3", 3),
-    Book(4, "Book Title 4", "Author 4", "Book Description 4", 1),
-    Book(5, "Book Title 5", "Author 5", "Book Description 5", 5),
-    Book(6, "Book Title 6", "Author 6", "Book Description 6", 4),
+    Book(1, "Book Title 1", "Author 1", "Book Description 1", 4, 2024),
+    Book(2, "Book Title 2", "Author 2", "Book Description 2", 5, 2022),
+    Book(3, "Book Title 3", "Author 3", "Book Description 3", 3, 2010),
+    Book(4, "Book Title 4", "Author 4", "Book Description 4", 1, 2027),
+    Book(5, "Book Title 5", "Author 5", "Book Description 5", 5, 2030),
+    Book(6, "Book Title 6", "Author 6", "Book Description 6", 4, 2024),
 ]
 
 app = FastAPI()
@@ -56,6 +59,15 @@ async def read_book_by_rating(rating: int):
     books_to_return = []
     for book in Books:
         if book.rating == rating:
+            books_to_return.append(book)
+    return books_to_return
+
+
+@app.get("/books/publish/")
+async def read_books_by_published_date(published_date: int):
+    books_to_return = []
+    for book in Books:
+        if book.published_date == published_date:
             books_to_return.append(book)
     return books_to_return
 
