@@ -60,6 +60,13 @@ async def read_book_by_rating(rating: int):
     return books_to_return
 
 
+@app.put("/books/update_book")
+async def update_book(book: BookRequest):
+    for i in range(len(Books)):
+        if Books[i].id == book.id:
+            Books[i] = Book(**book.dict())
+
+
 @app.post("/create-book")
 async def create_book(book_request: BookRequest):
     print(f"Book: {book_request}")
